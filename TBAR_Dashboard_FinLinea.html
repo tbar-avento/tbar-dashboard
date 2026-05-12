@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TBAR — Fin de Línea</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#0D1117; --bg2:#161B22; --bg3:#21262D;
+  --border:#30363D; --border2:#444C56;
+  --text:#E6EDF3; --text2:#8B949E; --text3:#484F58;
+  --blue:#388BFD; --blue-bg:#1F3A5F;
+  --green:#3FB950; --green-bg:#1A3A26;
+  --red:#F85149; --red-bg:#3D1A1A;
+  --yellow:#D29922; --yellow-bg:#3A2E0A;
+  --font:'IBM Plex Sans',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;min-height:100vh;}
+.app{padding:1.1rem;}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:8px;}
+.tl{display:flex;align-items:center;gap:10px;}
+.logo{width:36px;height:36px;border-radius:8px;background:var(--red-bg);border:1px solid var(--red);display:flex;align-items:center;justify-content:center;}
+.t1{font-size:15px;font-weight:600;color:var(--text);}
+.t2{font-size:11px;color:var(--text2);}
+.live{display:flex;align-items:center;gap:5px;font-size:11px;background:var(--green-bg);color:var(--green);padding:3px 10px;border-radius:99px;border:1px solid var(--green);}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.4s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.btn{padding:5px 12px;font-size:12px;font-weight:500;border-radius:6px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;font-family:var(--font);}
+.btn:hover{border-color:var(--blue);color:var(--text);}
+
+.lineas-bar{display:flex;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:.85rem;}
+.lb-item{flex:1;padding:9px 4px;text-align:center;cursor:pointer;border-right:1px solid var(--border);transition:background .12s;position:relative;background:var(--bg2);}
+.lb-item:last-child{border-right:none;}
+.lb-item.sel{background:var(--blue-bg);}
+.lb-item.todas{flex:0.65;background:var(--bg3);}
+.lb-item.todas.sel{background:var(--blue-bg);}
+.lb-id{font-size:11px;font-weight:500;color:var(--text);font-family:var(--mono);}
+.lb-item.sel .lb-id{color:var(--blue);}
+.lb-ng{font-size:10px;margin-top:2px;}
+.lb-item.ok .lb-ng{color:var(--green);}
+.lb-item.wn .lb-ng{color:var(--yellow);}
+.lb-item.al .lb-ng{color:var(--red);}
+.lb-item.todas .lb-ng{color:var(--text3);}
+.lb-bar{position:absolute;bottom:0;left:0;right:0;height:3px;}
+.lb-item.ok .lb-bar{background:var(--green);}
+.lb-item.wn .lb-bar{background:var(--yellow);}
+.lb-item.al .lb-bar{background:var(--red);}
+
+.hero{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:.85rem;}
+.mc{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 10px;}
+.mc.danger{background:var(--red-bg);border-color:var(--red);}
+.mc-l{font-size:11px;color:var(--text2);margin-bottom:3px;}
+.mc.danger .mc-l{color:var(--red);}
+.mc-v{font-size:24px;font-weight:600;color:var(--text);}
+.mc-v.dng{color:var(--red);}
+.mc-v.wrn{color:var(--yellow);}
+.mc.danger .mc-v{color:var(--red);}
+.mc-sub{font-size:10px;color:var(--text3);margin-top:1px;}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:10px;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem;}
+.ct{font-size:11px;font-weight:500;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.ct i{font-size:13px;}
+
+.alert-panel{background:var(--bg2);border-radius:10px;overflow:hidden;}
+.alert-panel.h-border{border:2px solid var(--red);}
+.alert-panel.m-border{border:2px solid var(--yellow);}
+.alert-panel.l-border{border:2px solid var(--blue);}
+.alert-panel.none-border{border:1px solid var(--border);}
+.ap-header{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--bg3);}
+.ap-header-left{display:flex;align-items:center;gap:7px;}
+.ap-sev{font-size:11px;font-weight:500;padding:2px 9px;border-radius:99px;display:flex;align-items:center;gap:4px;}
+.ap-sev.h{background:#4A1010;color:var(--red);border:1px solid var(--red);}
+.ap-sev.m{background:#3A2800;color:var(--yellow);border:1px solid var(--yellow);}
+.ap-sev.l{background:#0D2040;color:var(--blue);border:1px solid var(--blue);}
+.ap-counter{font-size:11px;color:var(--text3);font-family:var(--mono);}
+.ap-body{display:grid;grid-template-columns:minmax(0,1fr) 260px;}
+.ap-foto{background:var(--bg3);border-right:1px solid var(--border);min-height:370px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+.ap-foto img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;top:0;left:0;}
+.ap-foto-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:2rem;text-align:center;}
+.ap-foto-ph i{font-size:52px;color:var(--text3);}
+.ap-foto-ph .ph-comp{font-size:14px;font-weight:500;color:var(--text2);}
+.ap-foto-ph .ph-hint{font-size:11px;color:var(--text3);line-height:1.6;}
+.ap-info{padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:370px;}
+.ap-modelo{font-size:22px;font-weight:600;color:var(--text);margin-bottom:3px;font-family:var(--mono);}
+.ap-comp{font-size:13px;color:var(--text2);margin-bottom:10px;}
+.ap-desc{font-size:13px;color:var(--text);line-height:1.6;margin-bottom:14px;padding:10px 12px;background:var(--bg3);border-radius:6px;border:1px solid var(--border);}
+.chip-grid{display:flex;flex-direction:column;gap:7px;}
+.chip{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text2);}
+.chip i{font-size:14px;color:var(--text3);flex-shrink:0;}
+.chip-val{font-weight:500;color:var(--text);font-family:var(--mono);}
+.ap-footer{padding:7px 12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;background:var(--bg3);}
+.prog-bg{flex:1;height:3px;background:var(--bg);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:99px;transition:width .2s linear;}
+.prog-fill.h{background:var(--red);}
+.prog-fill.m{background:var(--yellow);}
+.prog-fill.l{background:var(--blue);}
+.prog-time{font-size:10px;color:var(--text3);min-width:32px;text-align:right;font-family:var(--mono);}
+.cdots{display:flex;gap:5px;justify-content:center;margin-top:6px;}
+.cdot{width:7px;height:7px;border-radius:50%;background:var(--border2);cursor:pointer;}
+.cdot.active.h{background:var(--red);}
+.cdot.active.m{background:var(--yellow);}
+.cdot.active.l{background:var(--blue);}
+
+.rank-row{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid var(--border);}
+.rank-row:last-child{border-bottom:none;}
+.rn{font-size:11px;font-weight:500;width:16px;text-align:center;color:var(--text3);}
+.rn.top{color:var(--red);}
+.rcode{font-size:12px;font-weight:500;color:var(--text);flex:1;font-family:var(--mono);}
+.rsub{font-size:10px;color:var(--text2);}
+.rbadge{font-size:10px;font-weight:500;padding:2px 7px;border-radius:99px;}
+.rbadge.al{background:var(--red-bg);color:var(--red);border:1px solid var(--red);}
+.rbadge.ok{background:var(--green-bg);color:var(--green);border:1px solid var(--green);}
+.comp-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.comp-lbl{font-size:11px;color:var(--text2);width:68px;flex-shrink:0;}
+.comp-bg{flex:1;height:5px;background:var(--bg3);border-radius:99px;overflow:hidden;}
+.comp-fill{height:100%;border-radius:99px;background:var(--red);}
+.comp-cnt{font-size:11px;font-weight:500;color:var(--red);width:18px;text-align:right;}
+.mod-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.mod-lbl{font-size:11px;color:var(--text2);width:52px;flex-shrink:0;}
+.mod-bg{flex:1;height:5px;background:var(--bg3);border-radius:99px;overflow:hidden;}
+.mod-fill{height:100%;border-radius:99px;background:var(--yellow);}
+.mod-cnt{font-size:11px;font-weight:500;color:var(--yellow);width:18px;text-align:right;}
+.no-alerts{text-align:center;padding:3rem 1rem;}
+.no-alerts i{font-size:36px;display:block;margin-bottom:8px;color:var(--green);}
+.upd{margin-top:.75rem;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text3);}
+.error-msg{background:var(--red-bg);border:1px solid var(--red);border-radius:8px;padding:.75rem 1rem;color:var(--red);font-size:12px;margin-bottom:.85rem;}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="topbar">
+  <div class="tl">
+    <div class="logo"><i class="ti ti-alert-triangle" style="font-size:17px;color:#F85149;"></i></div>
+    <div><div class="t1">Fin de Línea — TBAR</div><div class="t2">Avento IS SRL · Panel operativo</div></div>
+    <div class="live"><div class="dot"></div>En vivo</div>
+  </div>
+  <button class="btn" onclick="cargarDatos()"><i class="ti ti-refresh" style="font-size:13px;vertical-align:-2px;"></i></button>
+</div>
+
+<div id="error-box" style="display:none;" class="error-msg"></div>
+<div class="lineas-bar" id="lineas-bar"></div>
+<div class="hero" id="hero"></div>
+
+<div class="layout">
+  <div>
+    <div id="alert-panel-wrap"></div>
+    <div class="cdots" id="cdots"></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px;">
+    <div class="card">
+      <div class="ct"><i class="ti ti-users"></i> Ranking inspectores</div>
+      <div id="ranking"></div>
+    </div>
+    <div class="card">
+      <div class="ct"><i class="ti ti-tool"></i> NG por componente</div>
+      <div id="comp-bars"></div>
+      <div style="border-top:1px solid var(--border);margin:7px 0 5px;"></div>
+      <div class="ct" style="margin-bottom:5px;"><i class="ti ti-tag"></i> NG por modelo</div>
+      <div id="mod-bars"></div>
+    </div>
+  </div>
+</div>
+
+<div class="upd">
+  <span id="last-upd">Última actualización: —</span>
+  <span id="linea-label" style="font-weight:500;color:var(--blue);">Todas las líneas</span>
+</div>
+
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzgtlgOYb-Yhv1wrTL6y-yeC9b_amuJskE-p5fU6tpMCqru6ra3CtzmScR-Jvy_4O9g/exec";
+const ROTATE_MS = 180000;
+const SEV_LABEL = { h:'CRÍTICO', m:'ATENCIÓN', l:'AVISO' };
+const LINEAS = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M11'];
+
+let lineaSel = 'todas';
+let carIdx = 0, carTimer = null, progTimer = null;
+let datosGlobales = null;
+
+async function cargarDatos() {
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    // Usar el resumen que viene calculado desde el Apps Script
+    // que ya tiene los nombres de campos correctos y las fotos procesadas
+    if (data.resumen && data.resumen.porLinea) {
+      datosGlobales = adaptarResumen(data.resumen);
+    } else {
+      datosGlobales = procesarDatos(data.registros || []);
+    }
+    document.getElementById('error-box').style.display = 'none';
+    render();
+    document.getElementById('last-upd').textContent = 'Última actualización: ' + new Date().toLocaleTimeString('es-AR');
+  } catch(err) {
+    const eb = document.getElementById('error-box');
+    eb.style.display = 'block';
+    eb.innerHTML = '<i class="ti ti-wifi-off" style="font-size:13px;vertical-align:-2px;"></i> Sin conexión con Google Sheets. Mostrando datos de ejemplo. Error: ' + err.message;
+    datosGlobales = getDatosEjemplo();
+    render();
+    document.getElementById('last-upd').textContent = 'Sin conexión — datos de ejemplo';
+  }
+}
+
+// Adaptar el resumen de la API al formato que usa el dashboard
+function adaptarResumen(resumen) {
+  const lineasMap = {};
+  LINEAS.forEach(l => lineasMap[l] = { id:l, ok:true, ng:0, alertas:[] });
+
+  // Poblar desde el resumen de la API
+  (resumen.porLinea || []).forEach(l => {
+    if (lineasMap[l.id]) {
+      lineasMap[l.id].ng  = l.ng  || 0;
+      lineasMap[l.id].ok  = l.ok !== false;
+      lineasMap[l.id].alertas = (l.alertas || []).map(a => ({
+        mod:      a.mod      || a.modelo || '',
+        linea:    a.linea    || l.id,
+        desc:     a.desc     || '',
+        comp:     a.comp     || '',
+        lado:     a.lado     || '',
+        sev:      a.sev      || 'm',
+        hora:     a.hora     || '--:--',
+        sello:    a.sello    || '',
+        inspector:a.inspector|| '',
+        foto:     a.foto     || null,
+      }));
+    }
+  });
+
+  const inspectores = (resumen.porInspector || []);
+  const comp = {};
+  (resumen.porComponente || []).forEach(c => { comp[c.comp] = c.ng; });
+  const modelos = {};
+  (resumen.porModelo || []).forEach(m => { modelos[m.modelo] = m.ng; });
+
+  const todasAlertas = (resumen.alertas || []).map(a => ({
+    mod:      a.mod      || a.modelo || '',
+    linea:    a.linea    || '',
+    desc:     a.desc     || '',
+    comp:     a.comp     || '',
+    lado:     a.lado     || '',
+    sev:      a.sev      || 'm',
+    hora:     a.hora     || '--:--',
+    sello:    a.sello    || '',
+    inspector:a.inspector|| '',
+    foto:     a.foto     || null,
+  }));
+
+  return {
+    lineas: Object.values(lineasMap),
+    inspectores,
+    comp,
+    modelos,
+    todasAlertas,
+  };
+}
+
+function procesarDatos(registros) {
+  const lineasMap = {};
+  LINEAS.forEach(l => lineasMap[l] = { id:l, ok:true, ng:0, alertas:[] });
+  const inspectores = {}, comp = {}, modelos = {};
+
+  registros.forEach(r => {
+    const linea  = (r['LINEA']||'').toString().trim().toUpperCase();
+    const modelo = (r['MODELO']||'').toString().trim().toUpperCase();
+    const ng     = parseInt(r['CANTIDAD NG'])||0;
+    const desc   = (r['DESCRIPCION DE DEFECTO']||'').toString().trim();
+    const c      = (r['COMPONENTE']||'').toString().trim().toUpperCase();
+    const lado   = (r['LADO']||'').toString().trim();
+    const insp   = (r['QRE']||'').toString().trim().toUpperCase();
+    const sello  = (r['SELLO']||'').toString().trim();
+    const hora   = (r['FECHA']||'').toString().substring(11,16)||'--:--';
+    const foto   = r['__FOTO_URL__'] || r['LINK FOTO 1'] || r['FOTOS DEL DEFECTO'] || null;
+    const sev    = ng>0?(desc.toUpperCase().includes('DAÑO')||desc.toUpperCase().includes('DESCOSIDO')?'h':'m'):'l';
+
+    if (linea && lineasMap[linea] && ng > 0) {
+      lineasMap[linea].ng += ng;
+      lineasMap[linea].ok = false;
+      lineasMap[linea].alertas.push({ mod:modelo, linea, desc, comp:c, lado, sev, hora, sello, inspector:insp, foto });
+    }
+    if (insp) {
+      if (!inspectores[insp]) inspectores[insp] = { cod:insp, ng:0, alertas:0 };
+      inspectores[insp].ng += ng;
+      if (ng > 0) inspectores[insp].alertas++;
+    }
+    if (c && ng > 0) comp[c] = (comp[c]||0) + ng;
+    if (modelo && ng > 0) modelos[modelo] = (modelos[modelo]||0) + ng;
+  });
+
+  return {
+    lineas: Object.values(lineasMap),
+    inspectores: Object.values(inspectores).sort((a,b)=>b.alertas-a.alertas),
+    comp, modelos,
+    todasAlertas: Object.values(lineasMap).flatMap(l=>l.alertas).sort((a,b)=>a.sev==='h'?-1:b.sev==='h'?1:0),
+  };
+}
+
+function getDatosEjemplo() {
+  return {
+    lineas:[
+      {id:'M1',ok:true,ng:0,alertas:[]},{id:'M2',ok:false,ng:1,alertas:[{mod:'SFLE',linea:'M2',desc:'CUSHION RH — remache posición NG',comp:'CUSHION',lado:'RH',sev:'m',hora:'11:44',sello:'B-14',inspector:'QRE-008',foto:null}]},
+      {id:'M3',ok:false,ng:1,alertas:[{mod:'SFHG',linea:'M3',desc:'BACK LH — trama NG',comp:'BACK',lado:'LH',sev:'h',hora:'11:43',sello:'A-15',inspector:'QRE-008',foto:null}]},
+      {id:'M4',ok:false,ng:5,alertas:[{mod:'STL1',linea:'M4',desc:'CUSHION — descosido (daño línea)',comp:'CUSHION',lado:'—',sev:'h',hora:'08:15',sello:'B-01',inspector:'QRE-001',foto:null}]},
+      {id:'M5',ok:true,ng:0,alertas:[]},{id:'M6',ok:false,ng:4,alertas:[{mod:'SSLN',linea:'M6',desc:'CUSHION RH — funda manchada',comp:'CUSHION',lado:'RH',sev:'m',hora:'09:05',sello:'A-24',inspector:'QRE-002',foto:null}]},
+      {id:'M7',ok:true,ng:0,alertas:[]},{id:'M8',ok:true,ng:0,alertas:[]},{id:'M9',ok:true,ng:0,alertas:[]},
+      {id:'M11',ok:false,ng:3,alertas:[{mod:'HRDH-L',linea:'M11',desc:'CUSHION LH — descosido',comp:'CUSHION',lado:'LH',sev:'h',hora:'10:30',sello:'-',inspector:'QRE-001',foto:null}]},
+    ],
+    inspectores:[{cod:'QRE-001',ng:6,alertas:6},{cod:'QRE-002',ng:2,alertas:2},{cod:'QRE-008',ng:3,alertas:3}],
+    comp:{CUSHION:11,BACK:2},
+    modelos:{STL1:5,SSLN:4,'HRDH-L':3,SFHG:1,SFLE:1},
+    todasAlertas:[
+      {mod:'STL1',linea:'M4',desc:'CUSHION — descosido (daño línea)',comp:'CUSHION',lado:'—',sev:'h',hora:'08:15',sello:'B-01',inspector:'QRE-001',foto:null},
+      {mod:'HRDH-L',linea:'M11',desc:'CUSHION LH — descosido',comp:'CUSHION',lado:'LH',sev:'h',hora:'10:30',sello:'-',inspector:'QRE-001',foto:null},
+      {mod:'SFHG',linea:'M3',desc:'BACK LH — trama NG',comp:'BACK',lado:'LH',sev:'h',hora:'11:43',sello:'A-15',inspector:'QRE-008',foto:null},
+      {mod:'SSLN',linea:'M6',desc:'CUSHION RH — funda manchada',comp:'CUSHION',lado:'RH',sev:'m',hora:'09:05',sello:'A-24',inspector:'QRE-002',foto:null},
+      {mod:'SFLE',linea:'M2',desc:'CUSHION RH — remache posición NG',comp:'CUSHION',lado:'RH',sev:'m',hora:'11:44',sello:'B-14',inspector:'QRE-008',foto:null},
+    ],
+  };
+}
+
+function getAlertas() {
+  if (!datosGlobales) return [];
+  return lineaSel === 'todas'
+    ? datosGlobales.todasAlertas
+    : datosGlobales.todasAlertas.filter(a=>a.linea===lineaSel);
+}
+
+function render() {
+  if (!datosGlobales) return;
+  const d = datosGlobales;
+  const alerts = getAlertas();
+  const tNG = d.lineas.reduce((a,l)=>a+l.ng,0);
+  const criticas = alerts.filter(a=>a.sev==='h').length;
+
+  document.getElementById('linea-label').textContent = lineaSel==='todas'?'Todas las líneas':'Línea '+lineaSel+' destacada';
+
+  document.getElementById('lineas-bar').innerHTML =
+    `<div class="lb-item todas ${lineaSel==='todas'?'sel':''}" onclick="selLinea('todas')">
+      <div class="lb-id" style="font-size:10px;">Todas</div>
+      <div class="lb-ng" style="color:var(--text3);">${tNG} NG</div>
+      <div class="lb-bar" style="background:var(--border);"></div>
+    </div>` +
+    d.lineas.map(l => {
+      const haH = d.todasAlertas.some(a=>a.linea===l.id&&a.sev==='h');
+      const cls = haH?'al':l.ng>0?'wn':'ok';
+      return `<div class="lb-item ${cls} ${lineaSel===l.id?'sel':''}" onclick="selLinea('${l.id}')">
+        <div class="lb-id">${l.id}</div>
+        <div class="lb-ng">${l.ng>0?l.ng+' NG':l.ok?'OK':'—'}</div>
+        <div class="lb-bar"></div>
+      </div>`;
+    }).join('');
+
+  document.getElementById('hero').innerHTML = `
+    <div class="mc ${criticas>0?'danger':''}">
+      <div class="mc-l">Alertas críticas</div>
+      <div class="mc-v dng">${criticas}</div>
+      <div class="mc-sub">requieren acción ya</div>
+    </div>
+    <div class="mc">
+      <div class="mc-l">Alertas totales</div>
+      <div class="mc-v ${alerts.length>0?'wrn':''}">${alerts.length}</div>
+      <div class="mc-sub">activas ahora</div>
+    </div>
+    <div class="mc">
+      <div class="mc-l">Material NG</div>
+      <div class="mc-v ${tNG>0?'dng':''}">${tNG}</div>
+      <div class="mc-sub">unidades</div>
+    </div>
+  `;
+
+  document.getElementById('ranking').innerHTML = d.inspectores.slice(0,5).map((ins,i)=>
+    `<div class="rank-row">
+      <span class="rn ${i===0&&ins.alertas>0?'top':''}">${i+1}</span>
+      <div style="flex:1;"><div class="rcode">${ins.cod}</div><div class="rsub">${ins.ng} NG</div></div>
+      <span class="rbadge ${ins.alertas>0?'al':'ok'}">${ins.alertas}</span>
+    </div>`
+  ).join('') || '<div style="color:var(--text3);font-size:12px;padding:.5rem;">Sin datos</div>';
+
+  const maxC = Math.max(...Object.values(d.comp), 1);
+  document.getElementById('comp-bars').innerHTML =
+    Object.entries(d.comp).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
+      <div class="comp-row">
+        <span class="comp-lbl">${k}</span>
+        <div class="comp-bg"><div class="comp-fill" style="width:${Math.round(v/maxC*100)}%;"></div></div>
+        <span class="comp-cnt">${v}</span>
+      </div>`).join('') || '<div style="color:var(--text3);font-size:12px;">Sin NG</div>';
+
+  const maxM = Math.max(...Object.values(d.modelos), 1);
+  document.getElementById('mod-bars').innerHTML =
+    Object.entries(d.modelos).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v])=>`
+      <div class="mod-row">
+        <span class="mod-lbl">${k}</span>
+        <div class="mod-bg"><div class="mod-fill" style="width:${Math.round(v/maxM*100)}%;"></div></div>
+        <span class="mod-cnt">${v}</span>
+      </div>`).join('') || '<div style="color:var(--text3);font-size:12px;">Sin NG</div>';
+
+  renderCarousel(alerts);
+}
+
+function renderCarousel(alerts) {
+  stopCarousel();
+  const wrap = document.getElementById('alert-panel-wrap');
+  const dotsEl = document.getElementById('cdots');
+  if (!alerts.length) {
+    wrap.innerHTML = `<div class="alert-panel none-border"><div class="no-alerts"><i class="ti ti-circle-check"></i><div style="font-size:15px;color:var(--green);font-weight:500;">Sin alertas activas</div><div style="font-size:12px;color:var(--text3);margin-top:4px;">Todas las líneas operando correctamente</div></div></div>`;
+    dotsEl.innerHTML = ''; return;
+  }
+  carIdx = 0;
+  buildSlide(alerts, 0);
+  dotsEl.innerHTML = alerts.map((_,i)=>`<div class="cdot ${i===0?'active':''} ${alerts[i].sev}" onclick="goSlide(${i})"></div>`).join('');
+  if (alerts.length > 1) startCarousel(alerts);
+}
+
+function buildSlide(alerts, idx) {
+  const a = alerts[idx];
+  document.getElementById('alert-panel-wrap').innerHTML = `
+    <div class="alert-panel ${a.sev}-border">
+      <div class="ap-header">
+        <div class="ap-header-left">
+          <span class="ap-sev ${a.sev}"><i class="ti ti-alert-triangle" style="font-size:11px;"></i>${SEV_LABEL[a.sev]}</span>
+          <span style="font-size:12px;font-weight:500;color:var(--text);font-family:var(--mono);">${a.linea}</span>
+          <span style="font-size:11px;color:var(--text3);">· ${a.hora}</span>
+        </div>
+        <span class="ap-counter">${idx+1} / ${alerts.length}</span>
+      </div>
+      <div class="ap-body">
+        <div class="ap-foto">
+          ${a.foto
+            ? `<img src="${a.foto}" alt="Foto del defecto ${a.mod}">`
+            : `<div class="ap-foto-ph">
+                <i class="ti ti-camera"></i>
+                <div class="ph-comp">${a.comp||'Componente'}${a.lado&&a.lado!=='—'?' · '+a.lado:''}</div>
+                <div class="ph-hint">La foto aparece aquí cuando se sube desde el formulario</div>
+              </div>`
+          }
+        </div>
+        <div class="ap-info">
+          <div>
+            <div class="ap-modelo">${a.mod}</div>
+            <div class="ap-comp">${a.comp||''}${a.lado&&a.lado!=='—'?' · '+a.lado:''}</div>
+            <div class="ap-desc">${a.desc}</div>
+          </div>
+          <div class="chip-grid">
+            <div class="chip"><i class="ti ti-user"></i><span class="chip-val">${a.inspector||'—'}</span></div>
+            ${a.sello?`<div class="chip"><i class="ti ti-tag"></i>Sello: <span class="chip-val">${a.sello}</span></div>`:''}
+            <div class="chip"><i class="ti ti-clock"></i>Registrado: <span class="chip-val">${a.hora}</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ap-footer">
+        <div class="prog-bg"><div class="prog-fill ${a.sev}" id="progress-fill" style="width:0%;"></div></div>
+        <span class="prog-time" id="prog-time">3:00</span>
+      </div>
+    </div>`;
+}
+
+function goSlide(idx) {
+  const alerts = getAlertas();
+  if (!alerts.length) return;
+  carIdx = idx;
+  buildSlide(alerts, idx);
+  document.querySelectorAll('.cdot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  resetProgress();
+}
+
+function startCarousel(alerts) {
+  resetProgress();
+  carTimer = setInterval(()=>{ goSlide((carIdx+1)%alerts.length); }, ROTATE_MS);
+}
+
+function stopCarousel() {
+  if(carTimer){ clearInterval(carTimer); carTimer=null; }
+  if(progTimer){ clearInterval(progTimer); progTimer=null; }
+}
+
+function resetProgress() {
+  if(progTimer){ clearInterval(progTimer); progTimer=null; }
+  let elapsed = 0;
+  const fill = document.getElementById('progress-fill');
+  const timeEl = document.getElementById('prog-time');
+  if(fill) fill.style.width = '0%';
+  progTimer = setInterval(()=>{
+    elapsed += 200;
+    const pct = Math.min(100, elapsed/ROTATE_MS*100);
+    const rem = Math.max(0, Math.ceil((ROTATE_MS-elapsed)/1000));
+    if(fill) fill.style.width = pct+'%';
+    if(timeEl) timeEl.textContent = Math.floor(rem/60)+':'+(rem%60<10?'0':'')+rem%60;
+    if(elapsed >= ROTATE_MS){ clearInterval(progTimer); progTimer=null; }
+  }, 200);
+}
+
+function selLinea(id) { lineaSel=id; carIdx=0; render(); }
+
+// Auto-refresh cada 30 segundos
+cargarDatos();
+setInterval(cargarDatos, 30000);
+</script>
+</body>
+</html>

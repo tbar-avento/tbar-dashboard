@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TBAR — Dashboard General</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --bg:#0D1117; --bg2:#161B22; --bg3:#21262D;
+  --border:#30363D; --border2:#444C56;
+  --text:#E6EDF3; --text2:#8B949E; --text3:#484F58;
+  --blue:#388BFD; --blue-bg:#1F3A5F;
+  --green:#3FB950; --green-bg:#1A3A26;
+  --red:#F85149; --red-bg:#3D1A1A;
+  --yellow:#D29922; --yellow-bg:#3A2E0A;
+  --font:'IBM Plex Sans',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;min-height:100vh;}
+.app{padding:1.25rem;}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:10px;}
+.tl{display:flex;align-items:center;gap:12px;}
+.logo{width:38px;height:38px;border-radius:8px;background:var(--blue-bg);border:1px solid var(--blue);display:flex;align-items:center;justify-content:center;}
+.t1{font-size:16px;font-weight:600;color:var(--text);}
+.t2{font-size:11px;color:var(--text2);margin-top:1px;}
+.live{display:flex;align-items:center;gap:6px;font-size:11px;background:var(--green-bg);color:var(--green);padding:4px 11px;border-radius:99px;border:1px solid var(--green);}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.4s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.controls{display:flex;gap:8px;align-items:center;}
+.btn{padding:6px 14px;font-size:12px;font-weight:500;border-radius:6px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;font-family:var(--font);}
+.btn:hover{border-color:var(--blue);color:var(--text);}
+.btn.active-all{border-color:var(--blue);background:var(--blue-bg);color:var(--blue);}
+.btn.active-b{border-color:#58A6FF;background:#1A3A5F;color:#58A6FF;}
+.btn.active-n{border-color:#D29922;background:#3A2E0A;color:#D29922;}
+.btn.active-a{border-color:#3FB950;background:#1A3A26;color:#3FB950;}
+.turno-row{display:flex;gap:6px;margin-bottom:1.1rem;flex-wrap:wrap;}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:1.1rem;}
+.mc{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 12px;}
+.mc-l{font-size:11px;color:var(--text2);margin-bottom:5px;}
+.mc-v{font-size:24px;font-weight:600;color:var(--text);}
+.mc-v.dng{color:var(--red);}
+.mc-v.suc{color:var(--green);}
+.mc-v.wrn{color:var(--yellow);}
+.mc-sub{font-size:10px;color:var(--text3);margin-top:3px;}
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:10px;}
+.g3{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:10px;margin-bottom:10px;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;}
+.ct{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;}
+.ct-l{display:flex;align-items:center;gap:5px;}
+.ct i{font-size:14px;}
+.linea-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.linea-id{font-size:12px;font-weight:500;color:var(--text);width:30px;flex-shrink:0;font-family:var(--mono);}
+.bar-bg{flex:1;height:8px;background:var(--bg3);border-radius:99px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:99px;transition:width .5s ease;}
+.linea-cnt{font-size:11px;font-weight:500;width:38px;text-align:right;flex-shrink:0;}
+.rank-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);}
+.rank-row:last-child{border-bottom:none;}
+.rn{font-size:11px;font-weight:500;width:18px;text-align:center;color:var(--text3);}
+.rn.top{color:var(--red);}
+.rav{width:28px;height:28px;border-radius:50%;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:var(--blue);flex-shrink:0;font-family:var(--mono);}
+.rcode{font-size:12px;font-weight:500;color:var(--text);flex:1;font-family:var(--mono);}
+.rsub{font-size:10px;color:var(--text2);}
+.rbadge{font-size:11px;font-weight:500;padding:2px 8px;border-radius:99px;}
+.rbadge.al{background:var(--red-bg);color:var(--red);border:1px solid var(--red);}
+.rbadge.ok{background:var(--green-bg);color:var(--green);border:1px solid var(--green);}
+.alert-item{display:flex;align-items:flex-start;gap:7px;padding:7px 9px;border-radius:6px;margin-bottom:5px;border-left:3px solid;}
+.alert-item.h{background:#2A1212;border-color:var(--red);}
+.alert-item.m{background:#2A2010;border-color:var(--yellow);}
+.alert-item.l{background:#101828;border-color:var(--blue);}
+.alert-item.h .ai-i{color:var(--red);}
+.alert-item.m .ai-i{color:var(--yellow);}
+.alert-item.l .ai-i{color:var(--blue);}
+.ai-i{font-size:13px;margin-top:1px;flex-shrink:0;}
+.ai-mod{font-size:12px;font-weight:500;color:var(--text);}
+.ai-desc{font-size:10px;color:var(--text2);}
+.ai-meta{margin-left:auto;text-align:right;flex-shrink:0;}
+.ai-l{font-size:10px;font-weight:500;font-family:var(--mono);}
+.alert-item.h .ai-l{color:var(--red);}
+.alert-item.m .ai-l{color:var(--yellow);}
+.alert-item.l .ai-l{color:var(--blue);}
+.ai-t{font-size:10px;color:var(--text3);}
+.comp-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.comp-lbl{font-size:11px;color:var(--text2);width:72px;flex-shrink:0;}
+.comp-bg{flex:1;height:6px;background:var(--bg3);border-radius:99px;overflow:hidden;}
+.comp-fill{height:100%;border-radius:99px;background:var(--red);}
+.comp-cnt{font-size:11px;font-weight:500;color:var(--red);width:22px;text-align:right;}
+.pf-btn{padding:3px 9px;font-size:11px;border-radius:99px;border:1px solid var(--border);cursor:pointer;background:transparent;color:var(--text2);font-family:var(--font);}
+.pf-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.pf-sep{width:1px;height:14px;background:var(--border);margin:0 3px;}
+.pf-lbl{font-size:10px;color:var(--text3);margin-right:2px;}
+.no-data{text-align:center;padding:2rem;color:var(--text3);font-size:13px;}
+.loading{text-align:center;padding:3rem;color:var(--text2);}
+.loading i{font-size:28px;display:block;margin-bottom:8px;animation:spin 1s linear infinite;}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.upd{display:flex;align-items:center;justify-content:space-between;margin-top:.85rem;font-size:11px;color:var(--text3);}
+.error-msg{background:var(--red-bg);border:1px solid var(--red);border-radius:8px;padding:1rem;color:var(--red);font-size:13px;margin-bottom:1rem;}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="topbar">
+  <div class="tl">
+    <div class="logo"><i class="ti ti-chart-infographic" style="font-size:19px;color:#388BFD;"></i></div>
+    <div><div class="t1">Dashboard General — TBAR</div><div class="t2">Avento IS SRL · Vista ejecutiva de calidad</div></div>
+    <div class="live"><div class="dot"></div>En vivo</div>
+  </div>
+  <div class="controls">
+    <button class="btn" onclick="cargarDatos()"><i class="ti ti-refresh" style="font-size:13px;vertical-align:-2px;"></i> Actualizar</button>
+  </div>
+</div>
+
+<div class="turno-row">
+  <button class="btn active-all" id="tb-ALL" onclick="setTurno('ALL')">Todos los turnos</button>
+  <button class="btn" id="tb-BLANCO" onclick="setTurno('BLANCO')">Blanco</button>
+  <button class="btn" id="tb-NARANJA" onclick="setTurno('NARANJA')">Naranja</button>
+  <button class="btn" id="tb-AMARILLO" onclick="setTurno('AMARILLO')">Amarillo</button>
+</div>
+
+<div id="error-box" style="display:none;" class="error-msg"></div>
+<div id="main-content">
+  <div class="loading"><i class="ti ti-loader"></i>Conectando con Google Sheets...</div>
+</div>
+
+<div class="upd">
+  <span id="last-upd">Última actualización: —</span>
+  <span style="color:var(--text3);">Dashboard General · Solo lectura</span>
+</div>
+
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzgtlgOYb-Yhv1wrTL6y-yeC9b_amuJskE-p5fU6tpMCqru6ra3CtzmScR-Jvy_4O9g/exec";
+let turno = 'ALL';
+let paretoLinea = 'todas';
+let paretoVista = 'modelo';
+let chartP = null;
+let todosRegistros = [];
+
+// ── Cargar datos desde Google Sheets ────────────────────────
+async function cargarDatos() {
+  try {
+    const url = turno === 'ALL' ? API_URL : `${API_URL}?turno=${turno}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Error HTTP ' + res.status);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    todosRegistros = data.registros || [];
+    document.getElementById('error-box').style.display = 'none';
+    renderDashboard(data.resumen || calcularResumenLocal(todosRegistros));
+    document.getElementById('last-upd').textContent = 'Última actualización: ' + new Date().toLocaleTimeString('es-AR');
+  } catch(err) {
+    // Si falla la API mostramos datos de ejemplo y el error
+    const errBox = document.getElementById('error-box');
+    errBox.style.display = 'block';
+    errBox.innerHTML = '<i class="ti ti-wifi-off" style="font-size:14px;vertical-align:-2px;"></i> No se pudo conectar con Google Sheets. Verificá que la URL de la API esté publicada correctamente. Error: ' + err.message;
+    renderDashboard(getEjemplo());
+    document.getElementById('last-upd').textContent = 'Sin conexión — mostrando datos de ejemplo';
+  }
+}
+
+// ── Calcular resumen desde registros crudos ──────────────────
+function calcularResumenLocal(registros) {
+  const lineasMap = {}, modelos = {}, defectos = {}, inspectores = {};
+  const comp = { CUSHION:0, BACK:0, 'HEAD REST':0, 'ARM REST':0, ORNAMENT:0 };
+  const LINEAS = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M11'];
+  LINEAS.forEach(l => lineasMap[l] = { id:l, ng:0, alertas:[] });
+
+  registros.forEach(r => {
+    const linea  = (r['LINEA'] || '').toString().trim().toUpperCase();
+    const modelo = (r['MODELO'] || '').toString().trim().toUpperCase();
+    const ng     = parseInt(r['CANTIDAD NG']) || 0;
+    const desc   = (r['DESCRIPCION DE DEFECTO'] || '').toString().trim().toUpperCase();
+    const c      = (r['COMPONENTE'] || '').toString().trim().toUpperCase();
+    const lado   = (r['LADO'] || '').toString().trim();
+    const insp   = (r['QRE'] || '').toString().trim().toUpperCase();
+    const hora   = (r['FECHA'] || '').toString().substring(0, 5);
+    const sev    = ng > 0 ? (desc.includes('DAÑO') || desc.includes('DESCOSIDO') ? 'h' : 'm') : 'l';
+
+    if (linea && lineasMap[linea]) {
+      lineasMap[linea].ng += ng;
+      if (ng > 0) lineasMap[linea].alertas.push({ modelo, desc, comp:c, lado, sev, hora });
+    }
+    if (modelo && ng > 0) modelos[modelo] = (modelos[modelo] || 0) + ng;
+    if (desc && ng > 0)   defectos[desc]  = (defectos[desc]  || 0) + ng;
+    if (c && comp[c] !== undefined && ng > 0) comp[c] += ng;
+    if (insp) {
+      if (!inspectores[insp]) inspectores[insp] = { cod:insp, ng:0, alertas:0 };
+      inspectores[insp].ng += ng;
+      if (ng > 0) inspectores[insp].alertas++;
+    }
+  });
+
+  const allAlertas = [];
+  Object.values(lineasMap).forEach(l => l.alertas.forEach(a => allAlertas.push({...a, linea:l.id})));
+
+  return {
+    porLinea:      Object.values(lineasMap),
+    porModelo:     Object.entries(modelos).sort((a,b)=>b[1]-a[1]).map(([k,v])=>({modelo:k,ng:v,linea:''})),
+    porDefecto:    Object.entries(defectos).sort((a,b)=>b[1]-a[1]).map(([k,v])=>({defecto:k,ng:v})),
+    porComponente: Object.entries(comp).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).map(([k,v])=>({comp:k,ng:v})),
+    porInspector:  Object.values(inspectores).sort((a,b)=>b.alertas-a.alertas),
+    alertas:       allAlertas.sort((a,b)=>a.sev==='h'?-1:b.sev==='h'?1:0),
+    totalNG:       Object.values(lineasMap).reduce((a,l)=>a+l.ng,0),
+    totalRegistros:registros.length,
+  };
+}
+
+// ── Datos de ejemplo cuando no hay conexión ──────────────────
+function getEjemplo() {
+  return {
+    porLinea:[{id:'M1',ng:0},{id:'M2',ng:1},{id:'M3',ng:1},{id:'M4',ng:5},{id:'M5',ng:0},{id:'M6',ng:4},{id:'M7',ng:0},{id:'M8',ng:0},{id:'M9',ng:0},{id:'M11',ng:3}],
+    porModelo:[{modelo:'STL1',ng:5},{modelo:'SSLN',ng:4},{modelo:'HRDH-L',ng:3},{modelo:'SFBN',ng:2},{modelo:'SFEP',ng:1}],
+    porDefecto:[{defecto:'DESCOSIDO (DAÑO LINEA)',ng:8},{defecto:'FUNDA MANCHADA',ng:4},{defecto:'QUEEN CORD ATRAPADO',ng:2}],
+    porComponente:[{comp:'CUSHION',ng:10},{comp:'BACK',ng:3}],
+    porInspector:[{cod:'QRE-001',ng:6,alertas:6},{cod:'QRE-002',ng:2,alertas:2},{cod:'QRE-003',ng:1,alertas:1}],
+    alertas:[
+      {mod:'STL1',linea:'M4',desc:'CUSHION — descosido (daño línea)',sev:'h',hora:'08:15'},
+      {mod:'SSLN',linea:'M6',desc:'CUSHION RH — funda manchada',sev:'m',hora:'09:05'},
+    ],
+    totalNG:14, totalRegistros:45,
+  };
+}
+
+// ── Render principal ─────────────────────────────────────────
+function renderDashboard(r) {
+  const tNG = r.totalNG || 0;
+  const lineasNG = (r.porLinea||[]).filter(l=>l.ng>0).length;
+  const totalAlertas = (r.alertas||[]).length;
+  const criticas = (r.alertas||[]).filter(a=>a.sev==='h').length;
+  const totalEscapes = (r.porInspector||[]).reduce((a,i)=>a+i.alertas,0);
+
+  document.getElementById('main-content').innerHTML = `
+    <div class="metrics" id="metrics"></div>
+    <div class="g2">
+      <div class="card"><div class="ct"><div class="ct-l"><i class="ti ti-layout-rows"></i> Defectos NG por línea</div></div><div id="lineas-bars"></div></div>
+      <div class="card"><div class="ct"><div class="ct-l"><i class="ti ti-bell"></i> Alertas activas</div></div><div id="alertas-list"></div></div>
+    </div>
+    <div class="g3">
+      <div class="card">
+        <div class="ct">
+          <div class="ct-l"><i class="ti ti-chart-bar"></i> Pareto NG</div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;" id="pareto-controls"></div>
+        </div>
+        <div style="position:relative;width:100%;height:210px;"><canvas id="chartPareto"></canvas></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card"><div class="ct"><div class="ct-l"><i class="ti ti-users"></i> Escapes por inspector</div></div><div id="ranking"></div></div>
+        <div class="card"><div class="ct"><div class="ct-l"><i class="ti ti-tool"></i> NG por componente</div></div><div id="comp-bars"></div></div>
+      </div>
+    </div>`;
+
+  document.getElementById('metrics').innerHTML = `
+    <div class="mc"><div class="mc-l">NG total</div><div class="mc-v ${tNG>0?'dng':''}">${tNG}</div><div class="mc-sub">unidades</div></div>
+    <div class="mc"><div class="mc-l">Alertas activas</div><div class="mc-v ${totalAlertas>0?'wrn':''}">${totalAlertas}</div><div class="mc-sub">${criticas} críticas</div></div>
+    <div class="mc"><div class="mc-l">Escapes</div><div class="mc-v ${totalEscapes>0?'dng':''}">${totalEscapes}</div><div class="mc-sub">por inspector</div></div>
+    <div class="mc"><div class="mc-l">Líneas con NG</div><div class="mc-v ${lineasNG>0?'wrn':''}">${lineasNG}</div><div class="mc-sub">de ${(r.porLinea||[]).length}</div></div>
+    <div class="mc"><div class="mc-l">Registros</div><div class="mc-v">${r.totalRegistros||0}</div><div class="mc-sub">del turno</div></div>
+  `;
+
+  const maxNG = Math.max(...(r.porLinea||[]).map(l=>l.ng), 1);
+  document.getElementById('lineas-bars').innerHTML = (r.porLinea||[]).map(l => {
+    const col = l.ng===0?'#3FB950':l.ng<=2?'#D29922':'#F85149';
+    return `<div class="linea-row">
+      <span class="linea-id">${l.id}</span>
+      <div class="bar-bg"><div class="bar-fill" style="width:${Math.round(l.ng/maxNG*100)}%;background:${col};"></div></div>
+      <span class="linea-cnt" style="color:${col};">${l.ng} NG</span>
+    </div>`;
+  }).join('') || '<div class="no-data">Sin datos</div>';
+
+  document.getElementById('alertas-list').innerHTML = (r.alertas||[]).length === 0
+    ? `<div class="no-data"><i class="ti ti-circle-check" style="font-size:22px;display:block;margin-bottom:5px;color:#3FB950;"></i>Sin alertas activas</div>`
+    : (r.alertas||[]).slice(0,5).map(a=>`<div class="alert-item ${a.sev}">
+        <i class="ti ti-alert-triangle ai-i"></i>
+        <div><div class="ai-mod">${a.mod||a.modelo||''}</div><div class="ai-desc">${a.desc||''}</div></div>
+        <div class="ai-meta"><div class="ai-l">${a.linea||''}</div><div class="ai-t">${a.hora||''}</div></div>
+      </div>`).join('');
+
+  document.getElementById('ranking').innerHTML = (r.porInspector||[]).slice(0,6).map((ins,i)=>
+    `<div class="rank-row">
+      <span class="rn ${i===0&&ins.alertas>0?'top':''}">${i+1}</span>
+      <div class="rav">${(ins.cod||'').slice(-3)}</div>
+      <div style="flex:1;"><div class="rcode">${ins.cod||''}</div><div class="rsub">${ins.ng||0} NG</div></div>
+      <span class="rbadge ${ins.alertas>0?'al':'ok'}">${ins.alertas||0} escape${(ins.alertas||0)!==1?'s':''}</span>
+    </div>`
+  ).join('') || '<div class="no-data">Sin datos</div>';
+
+  const maxC = Math.max(...(r.porComponente||[]).map(c=>c.ng), 1);
+  document.getElementById('comp-bars').innerHTML = (r.porComponente||[]).map(c=>`
+    <div class="comp-row">
+      <span class="comp-lbl">${c.comp}</span>
+      <div class="comp-bg"><div class="comp-fill" style="width:${Math.round(c.ng/maxC*100)}%;"></div></div>
+      <span class="comp-cnt">${c.ng}</span>
+    </div>`).join('') || '<div class="no-data" style="padding:.5rem;">Sin NG</div>';
+
+  renderPareto(r);
+}
+
+function renderPareto(r) {
+  const lineasConNG = ['todas', ...(r.porLinea||[]).filter(l=>l.ng>0).map(l=>l.id)];
+  document.getElementById('pareto-controls').innerHTML =
+    `<span class="pf-lbl">Vista:</span>`+
+    ['modelo','defecto'].map(v=>`<button class="pf-btn ${paretoVista===v?'active':''}" onclick="setParetoVista('${v}','${JSON.stringify(r).replace(/'/g,'')}')">${v==='modelo'?'Modelo':'Defecto'}</button>`).join('')+
+    `<div class="pf-sep"></div><span class="pf-lbl">Línea:</span>`+
+    lineasConNG.map(l=>`<button class="pf-btn ${paretoLinea===l?'active':''}" onclick="setParetoLinea('${l}','${JSON.stringify(r).replace(/'/g,'')}')">${l==='todas'?'Todas':l}</button>`).join('');
+
+  let datos = paretoVista === 'modelo'
+    ? (r.porModelo||[]).filter(d=>paretoLinea==='todas'||d.linea===paretoLinea)
+    : (r.porDefecto||[]);
+
+  if (!datos.length) { if(chartP){chartP.destroy();chartP=null;} return; }
+
+  const labels = datos.map(d=>d.modelo||d.defecto||'').slice(0,10);
+  const vals   = datos.map(d=>d.ng).slice(0,10);
+  const total  = vals.reduce((a,b)=>a+b,0);
+  let acc=0;
+  const acum = vals.map(v=>{acc+=v;return Math.round(acc/total*100);});
+
+  if(chartP){chartP.destroy();chartP=null;}
+  Chart.defaults.color = '#8B949E';
+  chartP = new Chart(document.getElementById('chartPareto'),{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {type:'bar',label:'NG',data:vals,backgroundColor:'#5A1A1A',borderColor:'#F85149',borderWidth:1,yAxisID:'y',order:2},
+        {type:'line',label:'% acum.',data:acum,borderColor:'#388BFD',backgroundColor:'transparent',pointBackgroundColor:'#388BFD',pointRadius:4,tension:.25,yAxisID:'y2',order:1,borderDash:[4,3]},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{font:{size:9},autoSkip:false,maxRotation:35},grid:{color:'#21262D'}},
+        y:{min:0,ticks:{font:{size:10},stepSize:1},grid:{color:'#21262D'},title:{display:true,text:'Cant. NG',font:{size:9},color:'#8B949E'}},
+        y2:{position:'right',min:0,max:100,ticks:{font:{size:10},callback:v=>v+'%'},grid:{display:false},title:{display:true,text:'% acum.',font:{size:9},color:'#388BFD'}},
+      }
+    }
+  });
+}
+
+function setParetoVista(v, rJson) { paretoVista=v; try{renderPareto(JSON.parse(rJson));}catch(e){cargarDatos();} }
+function setParetoLinea(l, rJson) { paretoLinea=l; try{renderPareto(JSON.parse(rJson));}catch(e){cargarDatos();} }
+
+function setTurno(t) {
+  turno=t; paretoLinea='todas';
+  ['ALL','BLANCO','NARANJA','AMARILLO'].forEach(x=>{
+    const el=document.getElementById('tb-'+x);
+    el.classList.remove('active-all','active-b','active-n','active-a');
+  });
+  document.getElementById('tb-'+t).classList.add({ALL:'active-all',BLANCO:'active-b',NARANJA:'active-n',AMARILLO:'active-a'}[t]);
+  cargarDatos();
+}
+
+// Auto-refresh cada 30 segundos
+cargarDatos();
+setInterval(cargarDatos, 30000);
+</script>
+</body>
+</html>
