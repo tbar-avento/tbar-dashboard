@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -483,16 +484,15 @@ async function enviar() {
   };
 
   try {
-    const resp = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+    // Usar GET para evitar problemas de CORS con Apps Script
+    const params = new URLSearchParams();
+    Object.entries(payload).forEach(([k,v]) => params.append(k, String(v)));
+    const url = API_URL + '?' + params.toString();
+    const resp = await fetch(url);
     const result = await resp.json();
     if (!result.ok) throw new Error(result.error || 'Error al guardar');
   } catch(e) {
-    // Si da error de CORS igual puede haber guardado — mostramos éxito
-    console.log('POST result:', e.message);
+    console.log('Error al enviar:', e.message);
   }
 
   const toast = document.getElementById('toast');
