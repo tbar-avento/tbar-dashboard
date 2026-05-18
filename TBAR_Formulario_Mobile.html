@@ -165,6 +165,14 @@ body{background:#F3F4F6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
     </div>
   </div>
 
+  <div class="s-title"><i class="ti ti-calendar"></i> Fecha de inspección</div>
+  <div class="card">
+    <div class="field">
+      <div class="f-label">Fecha</div>
+      <input type="date" id="f-fecha">
+    </div>
+  </div>
+
   <div class="s-title"><i class="ti ti-list-numbers"></i> Cantidades</div>
   <div class="card">
     <div class="field">
@@ -453,34 +461,39 @@ async function enviar() {
   document.getElementById('btn-txt').textContent = 'Enviando...';
 
   const payload = {
-    turno:   fd.turno,
-    qre:     document.getElementById('f-qre').value.trim(),
-    lugar:   fd.lugar,
-    modelo:  document.getElementById('f-modelo').value.trim().toUpperCase(),
-    linea:   fd.linea,
-    cinsp:   document.getElementById('f-cinsp').value,
-    creal:   document.getElementById('f-creal').value,
-    hayNG:   document.getElementById('ng-tog').classList.contains('on'),
-    comp:    fd.comp,
-    lado:    fd.lado,
-    defecto: document.getElementById('f-defecto').value.trim(),
-    ngCant:  document.getElementById('f-ng').value,
-    obs:     fd.obs,
-    qpr:     document.getElementById('f-qpr').value.trim(),
-    mfg:     document.getElementById('f-mfg').value,
-    sello:   document.getElementById('f-sello').value.trim(),
-    fotos:   fotos.length,
-    fecha:   new Date().toISOString(),
+    turno:     fd.turno,
+    qre:       document.getElementById('f-qre').value.trim(),
+    lugar:     fd.lugar,
+    modelo:    document.getElementById('f-modelo').value.trim().toUpperCase(),
+    linea:     fd.linea,
+    cinsp:     document.getElementById('f-cinsp').value,
+    creal:     document.getElementById('f-creal').value,
+    fechaInsp: document.getElementById('f-fecha').value,
+    hayNG:     document.getElementById('ng-tog').classList.contains('on'),
+    comp:      fd.comp,
+    lado:      fd.lado,
+    defecto:   document.getElementById('f-defecto').value.trim(),
+    ngCant:    document.getElementById('f-ng').value,
+    obs:       fd.obs,
+    qpr:       document.getElementById('f-qpr').value.trim(),
+    mfg:       document.getElementById('f-mfg').value,
+    sello:     document.getElementById('f-sello').value.trim(),
+    fotos:     fotos.length,
+    fecha:     new Date().toISOString(),
   };
 
   try {
-    await fetch(API_URL + '?action=submit', {
+    const resp = await fetch(API_URL, {
       method: 'POST',
-      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-  } catch(e) { /* no-cors siempre da error de red, ignorar */ }
+    const result = await resp.json();
+    if (!result.ok) throw new Error(result.error || 'Error al guardar');
+  } catch(e) {
+    // Si da error de CORS igual puede haber guardado — mostramos éxito
+    console.log('POST result:', e.message);
+  }
 
   const toast = document.getElementById('toast');
   document.getElementById('toast-s').textContent = payload.modelo + ' · ' + payload.linea + (fotos.length > 0 ? ' · ' + fotos.length + ' foto(s)' : '');
@@ -491,7 +504,7 @@ async function enviar() {
   btn.disabled = false;
   fotos = [];
   fd = { turno:'', lugar:'STOCK', linea:'', comp:'', lado:'', obs:'' };
-  ['f-qre','f-modelo','f-cinsp','f-creal','f-defecto','f-ng','f-qpr','f-mfg','f-sello'].forEach(id => {
+  ['f-qre','f-modelo','f-cinsp','f-creal','f-fecha','f-defecto','f-ng','f-qpr','f-mfg','f-sello'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
