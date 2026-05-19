@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -299,6 +298,34 @@ body{background:#F3F4F6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
   <p style="font-size:11px;color:#9CA3AF;text-align:center;margin-top:.5rem;">Revisá los datos antes de enviar</p>
 </div>
 
+<!-- PANTALLA ÉXITO -->
+<div class="step" id="step-ok" style="padding:2rem 1rem;text-align:center;">
+  <div style="width:72px;height:72px;border-radius:50%;background:#DCFCE7;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+    <i class="ti ti-circle-check" style="font-size:36px;color:#16A34A;"></i>
+  </div>
+  <div style="font-size:20px;font-weight:600;color:#111827;margin-bottom:8px;">¡Registro guardado!</div>
+  <div style="font-size:14px;color:#6B7280;margin-bottom:2rem;line-height:1.6;">Los datos se guardaron correctamente<br>en el sistema de calidad TBAR.</div>
+
+  <div style="background:#FFF7ED;border:1.5px solid #FED7AA;border-radius:12px;padding:1.1rem;margin-bottom:1.5rem;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <i class="ti ti-photo" style="font-size:18px;color:#EA580C;"></i>
+      <div style="font-size:14px;font-weight:600;color:#9A3412;">¿Tenés fotos del defecto?</div>
+    </div>
+    <div style="font-size:12px;color:#C2410C;margin-bottom:12px;line-height:1.5;">
+      Subí las fotos guardadas de WhatsApp tocando el botón de abajo. Se vinculan al registro que acabás de cargar.
+    </div>
+    <a href="https://forms.gle/Uanm84yyTbGJ86Mw6" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:10px;background:#EA580C;color:#fff;border:none;font-size:14px;font-weight:600;text-decoration:none;">
+      <i class="ti ti-camera" style="font-size:16px;"></i>
+      Subir fotos del defecto
+    </a>
+  </div>
+
+  <button onclick="nuevoRegistro()" style="width:100%;padding:13px;border-radius:10px;background:#1F4E79;color:#fff;border:none;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;">
+    <i class="ti ti-plus" style="font-size:16px;"></i>
+    Nuevo registro
+  </button>
+</div>
+
 <div class="submit-bar">
   <button class="btn-sub" id="btn-sub" onclick="handleBtn()">
     <span id="btn-txt">Siguiente</span>
@@ -496,12 +523,17 @@ async function enviar() {
   }
 
   const toast = document.getElementById('toast');
-  document.getElementById('toast-s').textContent = payload.modelo + ' · ' + payload.linea + (fotos.length > 0 ? ' · ' + fotos.length + ' foto(s)' : '');
+  document.getElementById('toast-s').textContent = payload.modelo + ' · ' + payload.linea + (payload.ngCant > 0 ? ' · ' + payload.ngCant + ' NG' : '');
   toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3500);
 
-  // Reset
-  btn.disabled = false;
+  // Mostrar pantalla de éxito con botón de fotos
+  document.getElementById('step'+step).classList.remove('active');
+  step = 99;
+  document.getElementById('step-ok').classList.add('active');
+  document.getElementById('btn-sub').style.display = 'none';
+  window.scrollTo(0,0);
+
+  // Reset datos internos
   fotos = [];
   fd = { turno:'', lugar:'STOCK', linea:'', comp:'', lado:'', obs:'' };
   ['f-qre','f-modelo','f-cinsp','f-creal','f-fecha','f-defecto','f-ng','f-qpr','f-mfg','f-sello'].forEach(id => {
@@ -514,7 +546,17 @@ async function enviar() {
   document.getElementById('ng-sec').classList.remove('show');
   document.getElementById('lug-S').classList.add('on');
   renderFotos();
-  setStep(1);
+
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function nuevoRegistro() {
+  document.getElementById('step-ok').classList.remove('active');
+  document.getElementById('btn-sub').style.display = 'flex';
+  step = 1;
+  document.getElementById('step1').classList.add('active');
+  window.scrollTo(0,0);
+  updateUI();
 }
 
 updateUI();
